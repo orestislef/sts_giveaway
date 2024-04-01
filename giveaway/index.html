@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Συμμετοχή στον Διαγωνισμό</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="checkbox"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="checkbox"] {
+            width: auto;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .countdown {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Συμμετοχή στον Διαγωνισμό</h2>
+        <form id="giveawayForm">
+            <div class="form-group">
+                <label for="name">Όνομα:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="surname">Επίθετο:</label>
+                <input type="text" id="surname" name="surname" required>
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Αριθμός Τηλεφώνου:</label>
+                <input type="tel" id="phone_number" name="phone_number" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="accepted_terms" name="accepted_terms" required>
+                    Αποδέχομαι τους όρους και τις προϋποθέσεις
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit">Υποβολή</button>
+            </div>
+        </form>
+        <div class="countdown" id="countdown"></div>
+    </div>
+	
+	<script>
+    document.getElementById('giveawayForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        fetch('insert.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert(data.message);
+                // You can redirect or do something else upon successful submission
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("April 7, 2024 21:00:00").getTime();
+
+        // Update the countdown every 1 second
+        var x = setInterval(function() {
+            // Get the current date and time
+            var now = new Date().getTime();
+
+            // Calculate the distance between now and the countdown date
+            var distance = countDownDate - now;
+
+            // Calculate days, hours, minutes, and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the countdown
+            document.getElementById("countdown").innerHTML = "Υπολείπονται: " + days + " ημέρες, " + hours + " ώρες, "
+            + minutes + " λεπτά, " + seconds + " δευτερόλεπτα";
+
+            // If the countdown is over, display a message
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Ο διαγωνισμός έχει λήξει!";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
